@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>di solutions</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="di solutions: consultoria TOTVS, engenharia de dados com Databricks, desenvolvimento de software e inteligência artificial.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: console-de-pipeline no hero, serviços como fichas técnicas 2x2, processo em linha do tempo real, faixa de stack monoespaçada, contato em banda final. Tema escuro único, cores da marca. */
+:root {
+  --ink: #060c19;
+  --panel: #0b1630;
+  --panel-2: #0f1d3d;
+  --line: #1c2d55;
+  --navy: #14336b;
+  --blue: #1a92e8;
+  --blue-soft: #7cc3f7;
+  --text: #e8eef9;
+  --muted: #93a3c4;
+  --ok: #3ecf8e;
+
+  --display: "Lexend", "Avenir Next", "Segoe UI", sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --gutter: max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--ink);
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--ink);
+}
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; border-radius: 4px; }
+
+.wrap {
+  max-width: 1160px; margin: 0 auto;
+  padding-left: var(--gutter); padding-right: var(--gutter-r);
+}
+
+/* marca */
+.brand { font-family: var(--display); font-weight: 600; letter-spacing: -0.03em; text-decoration: none; white-space: nowrap; }
+.brand .i { color: var(--blue); }
+
+/* header */
+header {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: color-mix(in srgb, var(--ink) 82%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-block: 16px; }
+header .brand { font-size: 1.5rem; }
+nav { display: flex; gap: 28px; align-items: center; }
+nav a { text-decoration: none; color: var(--muted); font-size: 0.92rem; transition: color .2s; }
+nav a:hover { color: var(--text); }
+nav .cta-sm {
+  color: var(--text); border: 1px solid var(--line); padding: 8px 14px; border-radius: 6px;
+}
+nav .cta-sm:hover { border-color: var(--blue); }
+
+/* hero */
+.hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
+#mesh { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .55; pointer-events: none; }
+.hero .wrap {
+  position: relative; display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center;
+  padding-block: 96px 104px;
+}
+.hero-copy { min-width: 0; }
+.eyebrow {
+  font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--blue-soft); display: inline-flex; align-items: center; gap: 10px;
+}
+.eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 12px var(--blue); }
+h1 {
+  font-family: var(--display); font-weight: 600; font-size: clamp(2.1rem, 4.4vw, 3.4rem);
+  line-height: 1.04; letter-spacing: -0.035em; margin: 20px 0 22px; text-wrap: balance;
+}
+h1 em { font-style: normal; color: var(--blue); }
+.lead { color: var(--muted); font-size: 1.12rem; max-width: 34em; margin: 0 0 36px; }
+.actions { display: flex; flex-wrap: wrap; gap: 14px; }
+.btn {
+  font-family: var(--display); font-weight: 500; font-size: 0.98rem; text-decoration: none;
+  padding: 14px 22px; border-radius: 8px; display: inline-flex; align-items: center; gap: 10px;
+  transition: transform .2s, background .2s, border-color .2s;
+}
+.btn-primary { background: var(--blue); color: #fff; }
+.btn-primary:hover { background: #2aa0f2; transform: translateY(-1px); }
+.btn-ghost { border: 1px solid var(--line); color: var(--text); }
+.btn-ghost:hover { border-color: var(--blue-soft); }
+
+/* console */
+.console {
+  min-width: 0; background: linear-gradient(180deg, var(--panel-2), var(--panel));
+  border: 1px solid var(--line); border-radius: 12px;
+  box-shadow: 0 30px 80px -30px rgba(26,146,232,.35);
+  font-family: var(--mono); font-size: 0.82rem; overflow: hidden;
+}
+.console-bar {
+  display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--line);
+  color: var(--muted); font-size: 0.75rem;
+}
+.console-bar span.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+.tabs { display: flex; gap: 4px; margin-left: auto; }
+.tab {
+  font-family: var(--mono); font-size: 0.74rem; color: var(--muted); background: transparent;
+  border: 1px solid transparent; border-radius: 5px; padding: 4px 10px; cursor: pointer;
+}
+.tab:hover { color: var(--text); }
+.tab[aria-selected="true"] { color: var(--text); border-color: var(--line); background: var(--ink); }
+.console-body { padding: 20px 20px 22px; overflow-x: auto; min-height: 272px; }
+.q {
+  color: var(--text); background: var(--ink); border: 1px solid var(--line); border-radius: 6px;
+  padding: 10px 12px; margin-bottom: 10px; font-size: 0.8rem;
+}
+.q::before { content: "> "; color: var(--blue); }
+.cmd { color: var(--text); margin-bottom: 14px; white-space: nowrap; }
+.cmd .p { color: var(--blue); }
+.cmd .flag { color: var(--blue-soft); }
+.step {
+  display: grid; grid-template-columns: 16px 64px 1fr auto; gap: 12px; align-items: center;
+  padding: 7px 0; white-space: nowrap; color: var(--muted);
+}
+.step .st { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); }
+.step .stage { color: var(--blue-soft); }
+.step .obj { color: var(--text); overflow: hidden; text-overflow: ellipsis; }
+.step .res { color: var(--ok); font-size: 0.76rem; }
+.flow {
+  margin-top: 18px; padding-top: 16px; border-top: 1px dashed var(--line);
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap; color: var(--muted); font-size: 0.74rem;
+}
+.flow b { font-weight: 500; color: var(--text); background: var(--ink); border: 1px solid var(--line); padding: 4px 8px; border-radius: 4px; }
+.flow i { font-style: normal; color: var(--blue); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .console.play .step { animation: lit 6s infinite; }
+  .console.play .step:nth-child(2) { animation-delay: 0s; }
+  .console.play .step:nth-child(3) { animation-delay: .9s; }
+  .console.play .step:nth-child(4) { animation-delay: 1.8s; }
+  .console.play .step:nth-child(5) { animation-delay: 2.7s; }
+  .console.play .step:nth-child(6) { animation-delay: 3.6s; }
+  @keyframes lit {
+    0%, 100% { background: transparent; }
+    6% { background: rgba(26,146,232,.12); }
+    16% { background: transparent; }
+  }
+  .console.play .step .st { animation: pulse 6s infinite; animation-delay: inherit; }
+  @keyframes pulse {
+    0%, 100% { box-shadow: none; }
+    6% { box-shadow: 0 0 0 5px rgba(62,207,142,.18); }
+    16% { box-shadow: none; }
+  }
+}
+
+/* seções */
+section.block { padding-block: 104px; border-bottom: 1px solid var(--line); }
+.sec-head { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: end; margin-bottom: 56px; }
+.sec-head > * { min-width: 0; }
+h2 {
+  font-family: var(--display); font-weight: 600; font-size: clamp(1.9rem, 3.6vw, 2.75rem);
+  line-height: 1.1; letter-spacing: -0.03em; margin: 14px 0 0; text-wrap: balance;
+}
+.sec-head p { color: var(--muted); margin: 0; max-width: 32em; }
+
+/* serviços */
+.services { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.svc { background: var(--ink); padding: 40px 36px; display: flex; flex-direction: column; gap: 18px; transition: background .25s; min-width: 0; }
+.svc:hover { background: var(--panel); }
+.svc-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.svc-icon {
+  width: 48px; height: 48px; border-radius: 10px; display: grid; place-items: center;
+  background: rgba(26,146,232,.1); border: 1px solid rgba(26,146,232,.3); color: var(--blue);
+}
+.svc-icon svg { width: 24px; height: 24px; }
+.svc-tag { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+.svc h3 { font-family: var(--display); font-weight: 600; font-size: 1.5rem; letter-spacing: -0.02em; margin: 0; }
+.svc p { color: var(--muted); margin: 0; }
+.svc ul { list-style: none; padding: 0; margin: 4px 0 0; display: grid; gap: 8px; }
+.svc li { position: relative; padding-left: 20px; font-size: 0.95rem; }
+.svc li::before { content: ""; position: absolute; left: 0; top: 0.65em; width: 8px; height: 1px; background: var(--blue); }
+.spec {
+  margin-top: auto; padding-top: 18px; border-top: 1px dashed var(--line);
+  font-family: var(--mono); font-size: 0.76rem; color: var(--blue-soft); overflow-wrap: anywhere;
+}
+
+/* processo */
+.process { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; position: relative; }
+.process::before { content: ""; position: absolute; left: 0; right: 0; top: 19px; height: 1px; background: linear-gradient(90deg, var(--blue), var(--line)); }
+.phase { position: relative; padding-right: 28px; min-width: 0; }
+.phase .n {
+  width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; position: relative;
+  background: var(--ink); border: 1px solid var(--blue); color: var(--blue);
+  font-family: var(--mono); font-size: 0.82rem; margin-bottom: 24px;
+}
+.phase h3 { font-family: var(--display); font-weight: 500; font-size: 1.2rem; margin: 0 0 8px; letter-spacing: -0.01em; }
+.phase p { color: var(--muted); font-size: 0.95rem; margin: 0; }
+.phase .out { margin-top: 14px; font-family: var(--mono); font-size: 0.74rem; color: var(--blue-soft); }
+
+/* stack */
+.stack-band { padding-block: 56px; border-bottom: 1px solid var(--line); background: var(--panel); }
+.stack-band .wrap { display: flex; align-items: center; gap: 32px; flex-wrap: wrap; }
+.stack-label { font-family: var(--mono); font-size: 0.76rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; flex: 0 0 auto; }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; flex: 1 1 400px; min-width: 0; }
+.chip { font-family: var(--mono); font-size: 0.82rem; padding: 7px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--ink); color: var(--text); }
+.chip.hl { border-color: rgba(26,146,232,.55); color: var(--blue-soft); }
+
+/* diferenciais */
+.diffs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; }
+.diff { min-width: 0; border-top: 1px solid var(--blue); padding-top: 22px; }
+.diff h3 { font-family: var(--display); font-weight: 500; font-size: 1.15rem; margin: 0 0 8px; }
+.diff p { color: var(--muted); margin: 0; font-size: 0.97rem; }
+
+/* contato */
+.contact { padding-block: 112px; position: relative; overflow: hidden; }
+.contact::after {
+  content: ""; position: absolute; width: 640px; height: 640px; right: -200px; top: -200px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(26,146,232,.22), transparent 65%); pointer-events: none;
+}
+.contact .wrap { position: relative; display: grid; grid-template-columns: 1.2fr 1fr; gap: 56px; align-items: center; }
+.contact .wrap > * { min-width: 0; }
+.contact h2 { font-size: clamp(2rem, 4.4vw, 3.3rem); }
+.contact p { color: var(--muted); max-width: 30em; }
+.channels { display: grid; gap: 12px; }
+.channel {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 18px 20px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel);
+}
+.channel > div { min-width: 0; }
+.channel .k { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.channel .v { font-family: var(--display); font-size: 1.05rem; user-select: all; overflow-wrap: anywhere; }
+.copy {
+  font-family: var(--mono); font-size: 0.76rem; color: var(--blue-soft); background: transparent;
+  border: 1px solid var(--line); border-radius: 6px; padding: 7px 10px; cursor: pointer; flex: 0 0 auto;
+}
+.copy:hover { border-color: var(--blue); }
+
+footer { border-top: 1px solid var(--line); }
+footer .wrap { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding-block: 28px; color: var(--muted); font-size: 0.85rem; }
+footer .brand { font-size: 1.2rem; color: var(--text); }
+
+@media (max-width: 920px) {
+  .hero .wrap, .contact .wrap, .sec-head { grid-template-columns: 1fr; }
+  .hero .wrap { padding-block: 64px 72px; gap: 44px; }
+  .process { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 44px; }
+  .process::before { display: none; }
+  .diffs { grid-template-columns: 1fr; gap: 28px; }
+  nav a:not(.cta-sm) { display: none; }
+}
+@media (max-width: 640px) {
+  .services { grid-template-columns: 1fr; }
+  .svc { padding: 30px 22px; }
+  .process { grid-template-columns: 1fr; }
+  section.block, .contact { padding-block: 72px; }
+  .step { grid-template-columns: 12px 54px 1fr; }
+  .step .res { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="brand" href="#topo" aria-label="di solutions, início">d<span class="i">i</span>solutions</a>
+    <nav aria-label="Principal">
+      <a href="#servicos">Serviços</a>
+      <a href="#como-trabalhamos">Como trabalhamos</a>
+      <a href="#stack">Tecnologias</a>
+      <a class="cta-sm" href="#contato">Fale com a gente</a>
+    </nav>
+  </div>
+</header>
+
+<main id="topo">
+  <section class="hero">
+    <canvas id="mesh" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <div class="hero-copy">
+        <span class="eyebrow">TOTVS · Databricks · Software · IA</span>
+        <h1>Especialistas em <em>TOTVS</em>, <em>engenharia de dados</em>, <em>desenvolvimento de software</em> e <em>inteligência artificial</em>.</h1>
+        <p class="lead">Atuamos em quatro frentes independentes. Você contrata a consultoria TOTVS, um projeto de dados, o desenvolvimento de um sistema ou uma solução de IA, cada uma com especialistas dedicados e escopo próprio.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="#contato">Agendar uma conversa
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="#servicos">Ver serviços</a>
+        </div>
+      </div>
+
+      <div class="console play" id="console">
+        <div class="console-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <div class="tabs" role="tablist" aria-label="Exemplos por área">
+            <button class="tab" type="button" role="tab" id="tab-totvs" aria-selected="true" aria-controls="pane-totvs">totvs</button>
+            <button class="tab" type="button" role="tab" id="tab-dados" aria-selected="false" aria-controls="pane-dados">dados</button>
+            <button class="tab" type="button" role="tab" id="tab-software" aria-selected="false" aria-controls="pane-software">software</button>
+            <button class="tab" type="button" role="tab" id="tab-ia" aria-selected="false" aria-controls="pane-ia">ia</button>
+          </div>
+        </div>
+        <div class="console-body">
+          <div class="pane" id="pane-totvs" role="tabpanel" aria-labelledby="tab-totvs">
+            <div class="cmd"><span class="p">$</span> advpl compile MT410TOK.prw <span class="flag">--env</span> homolog</div>
+            <div class="step"><span class="st"></span><span class="stage">compile</span><span class="obj">MT410TOK.prw · ponto de entrada</span><span class="res">ok</span></div>
+            <div class="step"><span class="st"></span><span class="stage">rpo</span><span class="obj">repositório homolog</span><span class="res">atualizado</span></div>
+            <div class="step"><span class="st"></span><span class="stage">teste</span><span class="obj">MATA410 · pedido de venda</span><span class="res">validado</span></div>
+            <div class="step"><span class="st"></span><span class="stage">deploy</span><span class="obj">ambiente produção</span><span class="res">agendado 22h</span></div>
+            <div class="flow"><b>Protheus</b><b>RM</b><b>Datasul</b><b>WinThor</b></div>
+          </div>
+          <div class="pane" id="pane-dados" role="tabpanel" aria-labelledby="tab-dados" hidden>
+            <div class="cmd"><span class="p">$</span> databricks bundle run vendas_lakehouse</div>
+            <div class="step"><span class="st"></span><span class="stage">ingest</span><span class="obj">banco + API · incremental</span><span class="res">12.480 linhas</span></div>
+            <div class="step"><span class="st"></span><span class="stage">bronze</span><span class="obj">raw.vendas</span><span class="res">delta ok</span></div>
+            <div class="step"><span class="st"></span><span class="stage">silver</span><span class="obj">clean.vendas_itens</span><span class="res">dedup ok</span></div>
+            <div class="step"><span class="st"></span><span class="stage">gold</span><span class="obj">fato_vendas_diarias</span><span class="res">publicado</span></div>
+            <div class="flow"><b>Spark</b><b>Delta Lake</b><b>Unity Catalog</b><b>Workflows</b></div>
+          </div>
+          <div class="pane" id="pane-software" role="tabpanel" aria-labelledby="tab-software" hidden>
+            <div class="cmd"><span class="p">$</span> sam deploy <span class="flag">--stack</span> integracao-pedidos</div>
+            <div class="step"><span class="st"></span><span class="stage">build</span><span class="obj">api-pedidos · python 3.12</span><span class="res">ok</span></div>
+            <div class="step"><span class="st"></span><span class="stage">test</span><span class="obj">148 testes</span><span class="res">passou</span></div>
+            <div class="step"><span class="st"></span><span class="stage">deploy</span><span class="obj">aws lambda + sqs</span><span class="res">publicado</span></div>
+            <div class="step"><span class="st"></span><span class="stage">monitor</span><span class="obj">latência p95</span><span class="res">180 ms</span></div>
+            <div class="flow"><b>Python</b><b>.NET</b><b>AWS</b><b>APIs REST</b></div>
+          </div>
+          <div class="pane" id="pane-ia" role="tabpanel" aria-labelledby="tab-ia" hidden>
+            <div class="cmd"><span class="p">$</span> agente consultar <span class="flag">--base</span> contratos/</div>
+            <div class="q">Quais contratos vencem em novembro com reajuste pelo IGP-M?</div>
+            <div class="step"><span class="st"></span><span class="stage">busca</span><span class="obj">1.240 documentos</span><span class="res">8 trechos</span></div>
+            <div class="step"><span class="st"></span><span class="stage">leitura</span><span class="obj">contratos_2025/*.pdf</span><span class="res">ok</span></div>
+            <div class="step"><span class="st"></span><span class="stage">resposta</span><span class="obj">3 contratos encontrados</span><span class="res">com fontes</span></div>
+            <div class="flow"><b>LLMs</b><b>RAG</b><b>Agentes</b><b>MCP</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="servicos">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="eyebrow">Serviços</span>
+          <h2>Cada área é um serviço independente.</h2>
+        </div>
+        <p>Você contrata só o que precisa. Cada frente tem especialistas próprios, com escopo, prazo e proposta separados.</p>
+      </div>
+
+      <div class="services">
+        <article class="svc">
+          <div class="svc-top">
+            <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3 9h18M8 13h4M8 16h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+            <span class="svc-tag">ERP</span>
+          </div>
+          <h3>Consultoria TOTVS</h3>
+          <p>Implantação, evolução e suporte do seu ERP, com foco em processo e aderência à operação.</p>
+          <ul>
+            <li>Parametrização e revisão de processos</li>
+            <li>Customizações em ADVPL e TLPP</li>
+            <li>Integrações via API REST e webservices</li>
+            <li>Relatórios gerenciais e fiscais</li>
+          </ul>
+          <div class="spec">Protheus · RM · Datasul · WinThor</div>
+        </article>
+
+        <article class="svc">
+          <div class="svc-top">
+            <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 3 8l9 5 9-5-9-5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="m3 12 9 5 9-5M3 16l9 5 9-5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+            <span class="svc-tag">Dados</span>
+          </div>
+          <h3>Engenharia de dados com Databricks</h3>
+          <p>Plataformas de dados modernas e governadas no Databricks, a partir de qualquer fonte.</p>
+          <ul>
+            <li>Arquitetura medallion: bronze, silver e gold</li>
+            <li>Ingestão incremental e CDC de bancos e APIs</li>
+            <li>Governança com Unity Catalog</li>
+            <li>Modelos analíticos prontos para BI</li>
+          </ul>
+          <div class="spec">Spark · Delta Lake · Workflows · SQL Warehouse</div>
+        </article>
+
+        <article class="svc">
+          <div class="svc-top">
+            <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="svc-tag">Software</span>
+          </div>
+          <h3>Desenvolvimento de software</h3>
+          <p>Sistemas, APIs e integrações sob medida, do desenho à operação em produção.</p>
+          <ul>
+            <li>Integrações com marketplaces, ERPs e meios de pagamento</li>
+            <li>APIs e microsserviços em Python e .NET</li>
+            <li>Arquitetura serverless com AWS Lambda e filas</li>
+            <li>Aplicações web, automações e monitoramento em produção</li>
+          </ul>
+          <div class="spec">Python · .NET · SQL · AWS · Azure · OpenTelemetry</div>
+        </article>
+
+        <article class="svc">
+          <div class="svc-top">
+            <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+            <span class="svc-tag">IA</span>
+          </div>
+          <h3>Inteligência artificial aplicada</h3>
+          <p>Soluções de IA sob medida que resolvem tarefas reais do dia a dia da empresa.</p>
+          <ul>
+            <li>Agentes que consultam e operam seus sistemas</li>
+            <li>Busca e respostas sobre documentos internos</li>
+            <li>Extração de dados de notas, contratos e PDFs</li>
+            <li>Previsões de demanda, churn e inadimplência</li>
+          </ul>
+          <div class="spec">LLMs · RAG · MCP · MLflow</div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <div class="stack-band" id="stack">
+    <div class="wrap">
+      <span class="stack-label">Tecnologias com que trabalhamos</span>
+      <div class="chips">
+        <span class="chip hl">TOTVS</span>
+        <span class="chip hl">Databricks</span>
+        <span class="chip">Apache Spark</span>
+        <span class="chip">Delta Lake</span>
+        <span class="chip">Python</span>
+        <span class="chip">SQL Server</span>
+        <span class="chip">Oracle</span>
+        <span class="chip">.NET</span>
+        <span class="chip">AWS</span>
+        <span class="chip">Azure</span>
+        <span class="chip">Airflow</span>
+        <span class="chip">ClickHouse</span>
+        <span class="chip hl">LLMs</span>
+      </div>
+    </div>
+  </div>
+
+  <section class="block" id="como-trabalhamos">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="eyebrow">Como trabalhamos</span>
+          <h2>Entregas curtas, com resultado visível a cada etapa.</h2>
+        </div>
+        <p>Começamos pelo problema de negócio, não pela ferramenta. Cada fase termina com algo que você consegue usar e avaliar.</p>
+      </div>
+
+      <div class="process">
+        <div class="phase">
+          <div class="n">01</div>
+          <h3>Diagnóstico</h3>
+          <p>Entendemos processos, sistemas e onde os dados se perdem hoje.</p>
+          <div class="out">entrega: mapa de sistemas e prioridades</div>
+        </div>
+        <div class="phase">
+          <div class="n">02</div>
+          <h3>Arquitetura</h3>
+          <p>Desenhamos a solução que cabe no seu momento e no seu orçamento.</p>
+          <div class="out">entrega: plano técnico e cronograma</div>
+        </div>
+        <div class="phase">
+          <div class="n">03</div>
+          <h3>Construção</h3>
+          <p>Desenvolvemos em ciclos curtos, validando com o seu time.</p>
+          <div class="out">entrega: funcionalidades em produção</div>
+        </div>
+        <div class="phase">
+          <div class="n">04</div>
+          <h3>Sustentação</h3>
+          <p>Monitoramos, ajustamos e evoluímos o que foi entregue.</p>
+          <div class="out">entrega: operação estável e documentada</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="diffs">
+        <div class="diff">
+          <h3>Especialista em cada frente</h3>
+          <p>Quem atende o seu TOTVS vive TOTVS. Quem cuida dos seus dados vive Databricks. Quem escreve o seu sistema vive código. Quem constrói a sua IA vive IA.</p>
+        </div>
+        <div class="diff">
+          <h3>Escopo claro, proposta separada</h3>
+          <p>Cada serviço tem sua própria proposta. Você contrata uma frente sem precisar levar as outras.</p>
+        </div>
+        <div class="diff">
+          <h3>Conversa direta com quem faz</h3>
+          <p>Sem camadas de gerência. Você fala com as pessoas que desenham e escrevem a solução.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contato">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">Contato</span>
+        <h2>Conte o desafio. A gente responde com um caminho.</h2>
+        <p>Uma primeira conversa de 30 minutos, sem custo, para entender o cenário e dizer com clareza o que faz sentido fazer.</p>
+      </div>
+      <div class="channels">
+        <div class="channel">
+          <div><div class="k">E-mail</div><div class="v" id="v-email">contato@disolutions.com.br</div></div>
+          <button class="copy" type="button" data-target="v-email">copiar</button>
+        </div>
+        <div class="channel">
+          <div><div class="k">WhatsApp</div><div class="v" id="v-zap">+55 (00) 00000-0000</div></div>
+          <button class="copy" type="button" data-target="v-zap">copiar</button>
+        </div>
+        <div class="channel">
+          <div><div class="k">LinkedIn</div><div class="v" id="v-in">linkedin.com/company/disolutions</div></div>
+          <button class="copy" type="button" data-target="v-in">copiar</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="brand">d<span class="i">i</span>solutions</span>
+    <span>Consultoria TOTVS · Databricks · Software · IA</span>
+    <span>© <span id="ano">2026</span> di solutions</span>
+  </div>
+</footer>
+
+<script>
+document.getElementById('ano').textContent = new Date().getFullYear();
+
+(function () {
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  var idx = 0, timer = null;
+  function show(i) {
+    idx = i;
+    tabs.forEach(function (t, k) {
+      t.setAttribute('aria-selected', k === i ? 'true' : 'false');
+      document.getElementById(t.getAttribute('aria-controls')).hidden = k !== i;
+    });
+  }
+  tabs.forEach(function (t, k) {
+    t.addEventListener('click', function () { clearInterval(timer); show(k); });
+  });
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    timer = setInterval(function () { show((idx + 1) % tabs.length); }, 6000);
+  }
+})();
+
+document.querySelectorAll('.copy').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var el = document.getElementById(btn.dataset.target);
+    var done = function () { btn.textContent = 'copiado'; setTimeout(function () { btn.textContent = 'copiar'; }, 1600); };
+    var select = function () { var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(el.textContent.trim()).then(done, select);
+    } else { select(); }
+  });
+});
+
+(function () {
+  var c = document.getElementById('mesh');
+  var ctx = c.getContext('2d');
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var pts = [], w, h, dpr;
+  function size() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = c.offsetWidth; h = c.offsetHeight;
+    c.width = w * dpr; c.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var n = Math.round(Math.min(70, (w * h) / 16000));
+    pts = [];
+    for (var i = 0; i < n; i++) {
+      pts.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - .5) * .25, vy: (Math.random() - .5) * .25 });
+    }
+  }
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    for (var i = 0; i < pts.length; i++) {
+      var p = pts[i];
+      if (!reduce) {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0 || p.x > w) p.vx *= -1;
+        if (p.y < 0 || p.y > h) p.vy *= -1;
+      }
+      for (var j = i + 1; j < pts.length; j++) {
+        var q = pts[j], dx = p.x - q.x, dy = p.y - q.y, d = Math.sqrt(dx * dx + dy * dy);
+        if (d < 130) {
+          ctx.strokeStyle = 'rgba(26,146,232,' + (0.22 * (1 - d / 130)) + ')';
+          ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke();
+        }
+      }
+      ctx.fillStyle = 'rgba(124,195,247,.55)';
+      ctx.beginPath(); ctx.arc(p.x, p.y, 1.4, 0, Math.PI * 2); ctx.fill();
+    }
+    if (!reduce) requestAnimationFrame(draw);
+  }
+  size(); draw();
+  addEventListener('resize', function () { size(); if (reduce) draw(); });
+})();
+</script>
+</body>
+</html>
